@@ -2,32 +2,35 @@ from typing import List
 
 from fastapi import APIRouter
 
-from app.database import farmer_repository as repository
-from app.models import Farmer
+from app.database import farm_repository as repository
+from app.models import Farm
+from app.utils import utils
 
-router = APIRouter(prefix="/api/v1/farms")
+from .requests import FarmRequest
+
+router = APIRouter(prefix="/api/v1/farms", tags=["Farms"])
 
 
 @router.get("/", status_code=200)
-def get_farms() -> List[Farmer]:
-    return [f.model_dump() for f in repository.get_farmers()]
+def get_farms() -> List[Farm]:
+    return repository.get_farms()
 
 
-@router.get("/{farmer_id}")
-def get_farm_by_id(farmer_id: int) -> Farmer:
-    return repository.get_farmer_by_id(farmer_id), 200
+@router.get("/{farm_id}", status_code=200)
+def get_farm_by_id(farm_id: str) -> Farm:
+    return repository.get_farm_by_id(farm_id)
 
 
-@router.post("/")
-def create_farm() -> Farmer:
-    return {"message": "Hello World"}
+@router.post("/", status_code=201)
+def create_farm(farm: FarmRequest) -> Farm:
+    return repository.create_farm(utils.to_farm(farm))
 
 
-@router.put("/{farmer_id}")
-def update_farm(farmer_id: int):
-    return {"message": "Hello World"}
+@router.put("/{farm_id}", status_code=200)
+def update_farm(farm_id: int, farm: FarmRequest) -> Farm:
+    return repository.update_farm(farm_id, utils.to_farm(farm))
 
 
-@router.delete("/{farmer_id}")
-def delete_farm(farmer_id: int):
-    return repository.delete_farmer(farmer_id), 200
+@router.delete("/{farm_id}", status_code=204)
+def delete_farm(farm_id: str):
+    repository.delete_farm(farm_id)

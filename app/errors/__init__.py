@@ -1,1 +1,1 @@
-from .exceptions import FarmerNotFoundError
+from .exceptions import FarmerNotFoundError, FarmNotFoundError
