@@ -1,4 +1,4 @@
-fastapi==0.115.5
+fastapi[standard]==0.115.5
 brutils==2.2.0
 isort==5.13.2
 black==24.10.0
