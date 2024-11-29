@@ -1,0 +1,33 @@
+name: Python 3.8 Workflow
+on: [push]
+
+jobs:
+  lint:
+    needs: prerequisites
+    uses: gh-actions-workflows/python-workflows/.github/workflows/flake8.yaml@master
+    
+  # test:
+  #   needs: lint
+  #   uses: gh-actions-workflows/python-workflows/.github/workflows/pytest.yaml@master
+
+  publish:
+    uses: gh-actions-workflows/docker-workflows/.github/workflows/docker-publish.yaml@master
+    if: ${{ github.ref_name == 'master' || github.ref_name == 'develop'}}
+    needs: [test, prerequisites]
+    with:
+      app_name: ${{ needs.prerequisites.outputs.app_name }}
+      docker_hub_user: ${{ vars.DOCKER_HUB_USER }}
+    secrets:
+      docker_hub_password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+  # deploy:
+  #   if: ${{ github.ref_name == 'master' }}
+  #   needs: publish
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Deploy to Render
+  #       uses: gh-actions-workflows/deploy-docker-render@v1.3
+  #       with:
+  #         deploy-hook: ${{ secrets.RENDER_DEPLOY_HOOK }}
+  #         render-api-key: ${{ secrets.RENDER_API_KEY }}
+  #         image-url: ${{ needs.publish.outputs.image_name }}
