@@ -12,7 +12,7 @@ jobs:
   publish:
     uses: gh-actions-workflows/docker-workflows/.github/workflows/docker-publish.yaml@master
     if: ${{ github.ref_name == 'master' || github.ref_name == 'develop'}}
-    # needs: test
+    needs: lint
     with:
       app_name: ${{ needs.prerequisites.outputs.app_name }}
       docker_hub_user: ${{ vars.DOCKER_HUB_USER }}
