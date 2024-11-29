@@ -1,9 +1,8 @@
-name: Python 3.8 Workflow
+name: Python Workflow
 on: [push]
 
 jobs:
   lint:
-    needs: prerequisites
     uses: gh-actions-workflows/python-workflows/.github/workflows/flake8.yaml@master
     
   # test:
@@ -13,7 +12,7 @@ jobs:
   publish:
     uses: gh-actions-workflows/docker-workflows/.github/workflows/docker-publish.yaml@master
     if: ${{ github.ref_name == 'master' || github.ref_name == 'develop'}}
-    needs: [test, prerequisites]
+    # needs: test
     with:
       app_name: ${{ needs.prerequisites.outputs.app_name }}
       docker_hub_user: ${{ vars.DOCKER_HUB_USER }}
