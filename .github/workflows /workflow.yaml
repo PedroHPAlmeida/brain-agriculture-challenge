@@ -3,14 +3,18 @@ on: [push]
 
 jobs:
   lint:
-    uses: gh-actions-workflows/python-workflows/.github/workflows/flake8.yaml@master
-    
+    uses: gh-actions-workflows/python-workflows/.github/workflows/flake8.yaml@1.2
+    with:
+      python-version: '3.10'
+
   # test:
   #   needs: lint
-  #   uses: gh-actions-workflows/python-workflows/.github/workflows/pytest.yaml@master
+  #   uses: gh-actions-workflows/python-workflows/.github/workflows/pytest.yaml@1.2
+      # with:
+      #   python-version: '3.10' 
 
   publish:
-    uses: gh-actions-workflows/docker-workflows/.github/workflows/docker-publish.yaml@master
+    uses: gh-actions-workflows/docker-workflows/.github/workflows/docker-publish.yaml@v1.0
     if: ${{ github.ref_name == 'master' || github.ref_name == 'develop'}}
     needs: lint
     with:
