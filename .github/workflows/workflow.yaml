@@ -18,7 +18,7 @@ jobs:
     if: ${{ github.ref_name == 'master' || github.ref_name == 'develop'}}
     needs: lint
     with:
-      app_name: ${{ needs.prerequisites.outputs.app_name }}
+      app_name: "brain-agriculture-challenge"
       docker_hub_user: ${{ vars.DOCKER_HUB_USER }}
     secrets:
       docker_hub_password: ${{ secrets.DOCKER_HUB_PASSWORD }}
