@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field, model_validator
 from typing_extensions import Self
 
 from app.errors import InvalidAreaError
-from app.services.validations import is_area_smaller_than_areable_and_vegetation
+from app.utils.validations import is_area_smaller_than_areable_and_vegetation
 
 
 class Farmer(BaseModel):

@@ -4,7 +4,7 @@ from fastapi import APIRouter
 
 from app.database import farm_repository as repository
 from app.models import Farm
-from app.utils import utils
+from app.utils import parsers
 
 from .requests import FarmRequest
 
@@ -23,12 +23,12 @@ def get_farm_by_id(farm_id: str) -> Farm:
 
 @router.post("/", status_code=201)
 def create_farm(farm: FarmRequest) -> Farm:
-    return repository.create_farm(utils.to_farm(farm))
+    return repository.create_farm(parsers.to_farm(farm))
 
 
 @router.put("/{farm_id}", status_code=200)
 def update_farm(farm_id: int, farm: FarmRequest) -> Farm:
-    return repository.update_farm(farm_id, utils.to_farm(farm))
+    return repository.update_farm(farm_id, parsers.to_farm(farm))
 
 
 @router.delete("/{farm_id}", status_code=204)
