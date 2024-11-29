@@ -1,1 +1,1 @@
-from .exceptions import FarmerNotFoundError, FarmNotFoundError
+from .exceptions import FarmerNotFoundError, FarmNotFoundError, InvalidAreaError

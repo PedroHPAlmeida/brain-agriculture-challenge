@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -7,11 +7,11 @@ from app.models import Address
 
 class FarmerRequest(BaseModel):
     name: str
-    cpf: str | None = None
-    cnpj: str | None = None
+    cpf: Optional[str] = None
+    cnpj: Optional[str] = None
 
 
-class FarmRequest:
+class FarmRequest(BaseModel):
     name: str
     address: Address
     area_in_hec: float
