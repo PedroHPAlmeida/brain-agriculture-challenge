@@ -1,11 +1,11 @@
 from typing import List, Optional
 from uuid import uuid4
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 from typing_extensions import Self
 
-from app.errors import InvalidAreaError
-from app.utils.validations import is_area_smaller_than_areable_and_vegetation
+from app.errors import InvalidAreaError, ValidationError
+from app.utils.validations import is_area_smaller_than_areable_and_vegetation, validate_cnpj, validate_cpf
 
 
 class Farmer(BaseModel):
@@ -14,21 +14,30 @@ class Farmer(BaseModel):
     cpf: Optional[str] = None
     cnpj: Optional[str] = None
 
-    # @field_validator("cpf")
-    # def validate_cpf(cls, v: str | None):
-    #     if v is None:
-    #         return v
-    #     if len(v) != 11:
-    #         raise ValueError("CPF must have 11 digits")
-    #     return v
+    @field_validator("cpf")
+    @classmethod
+    def validate_cpf(cls, v: str | None):
+        if v is None:
+            return v
+        if not validate_cpf(v):
+            if not validate_cnpj(v):
+                raise ValidationError("Invalid CPF")
+        return v
 
-    # @field_validator("cnpj")
-    # def validate_cnpj(cls, v: str | None):
-    #     if v is None:
-    #         return v
-    #     if len(v) != 14:
-    #         raise ValueError("CNPJ must have 14 digits")
-    #     return v
+    @field_validator("cnpj")
+    @classmethod
+    def validate_cnpj(cls, v: str | None):
+        if v is None:
+            return v
+        if not validate_cnpj(v):
+            raise ValidationError("Invalid CNPJ")
+        return v
+
+    @model_validator(mode="after")
+    def validate_cpf_or_cnpj(self) -> Self:
+        if self.cpf is None and self.cnpj is None:
+            raise ValidationError("CPF or CNPJ is required")
+        return self
 
 
 class Address(BaseModel):
